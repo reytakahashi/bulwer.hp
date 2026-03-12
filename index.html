@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulwer — 経営判断に、思考の土台を。</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --royal-blue: #1a3a6b;
+    --deep-navy: #0d1f3c;
+    --pale-blue: #e8eef7;
+    --gold: #b8960c;
+    --gold-light: #d4af37;
+    --white: #fafaf8;
+    --text-dark: #1a1a2e;
+    --text-mid: #4a4a6a;
+    --text-light: #8a8aaa;
+    --border: rgba(26, 58, 107, 0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    font-family: 'Noto Serif JP', serif;
+    background: var(--white);
+    color: var(--text-dark);
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(250,250,248,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s ease;
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    color: var(--royal-blue);
+    text-decoration: none;
+  }
+
+  .nav-logo span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-left: 3px;
+    vertical-align: super;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--text-mid);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--royal-blue); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    background: var(--deep-navy);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 10rem 4rem 8rem 8rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(26,58,107,0.4) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    color: var(--gold-light);
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-headline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+    font-weight: 200;
+    line-height: 2;
+    color: var(--white);
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+    max-width: 700px;
+  }
+
+  .hero-headline em {
+    font-style: normal;
+    color: var(--gold-light);
+    display: block;
+    font-size: 0.75em;
+    letter-spacing: 0.15em;
+    margin-top: 1rem;
+  }
+
+  .hero-sub {
+    margin-top: 3rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: rgba(250,250,248,0.4);
+    line-height: 2.2;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+    border-left: 1px solid rgba(184,150,12,0.3);
+    padding-left: 1.5rem;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 3rem;
+    left: 8rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: rgba(255,255,255,0.2);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1s forwards;
+  }
+
+  .hero-scroll::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,0.15);
+    margin: 0 auto 1rem;
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    padding: 10rem 0;
+    background: var(--white);
+    position: relative;
+  }
+
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 4rem;
+  }
+
+  .section-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .about-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--deep-navy);
+    letter-spacing: 0.03em;
+  }
+
+  .about-title em {
+    font-style: italic;
+    color: var(--royal-blue);
+  }
+
+  .about-body {
+    font-size: 0.9rem;
+    font-weight: 300;
+    line-height: 2.4;
+    color: var(--text-mid);
+    letter-spacing: 0.05em;
+  }
+
+  .about-body p + p { margin-top: 1.5rem; }
+
+  .philosophy-block {
+    margin-top: 4rem;
+    padding-left: 2rem;
+    border-left: 2px solid var(--gold);
+  }
+
+  .philosophy-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+    font-weight: 300;
+    line-height: 2.5;
+    color: var(--text-mid);
+    letter-spacing: 0.08em;
+  }
+
+  .philosophy-text strong {
+    color: var(--royal-blue);
+    font-weight: 400;
+  }
+
+  /* ── SERVICES ── */
+  #services {
+    padding: 10rem 0;
+    background: var(--pale-blue);
+  }
+
+  .services-header {
+    margin-bottom: 5rem;
+  }
+
+  .services-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 300;
+    color: var(--deep-navy);
+    letter-spacing: 0.03em;
+    margin-top: 1rem;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .service-card {
+    background: var(--white);
+    padding: 3.5rem 2.5rem;
+    position: relative;
+    transition: background 0.3s ease;
+    cursor: default;
+  }
+
+  .service-card:hover {
+    background: #2a4a7f;
+  }
+
+  .service-card:hover .service-name,
+  .service-card:hover .service-desc,
+  .service-card:hover .service-detail { color: rgba(255,255,255,0.85); }
+
+  .service-card:hover .service-en { color: var(--gold-light); }
+
+  .service-card:hover .service-number { color: rgba(255,255,255,0.12); }
+
+  .service-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: rgba(26,58,107,0.08);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    transition: color 0.3s;
+  }
+
+  .service-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    display: block;
+    transition: color 0.3s;
+  }
+
+  .service-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--deep-navy);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+  }
+
+  .service-desc {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 300;
+    line-height: 2.2;
+    color: var(--text-mid);
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+  }
+
+  .service-detail {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: var(--text-light);
+    line-height: 2;
+    letter-spacing: 0.05em;
+    transition: color 0.3s, border-color 0.3s;
+  }
+
+  /* ── MEDIA ── */
+  #media {
+    padding: 10rem 0;
+    background: var(--white);
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .media-card {
+    border: 1px solid var(--border);
+    padding: 2rem;
+    text-decoration: none;
+    display: block;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .media-card:hover {
+    border-color: var(--royal-blue);
+    transform: translateY(-4px);
+  }
+
+  .media-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .media-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.8;
+    color: var(--text-dark);
+    letter-spacing: 0.03em;
+  }
+
+  .media-account {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+  }
+
+  .media-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 3rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    color: var(--royal-blue);
+    text-decoration: none;
+    border-bottom: 1px solid var(--royal-blue);
+    padding-bottom: 2px;
+    transition: opacity 0.2s;
+  }
+
+  .media-more:hover { opacity: 0.6; }
+
+  /* ── CONTACT ── */
+  #contact {
+    padding: 10rem 0;
+    background: var(--deep-navy);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #contact::before {
+    content: 'BULWER';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20vw;
+    font-weight: 300;
+    color: rgba(255,255,255,0.02);
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+  }
+
+  .contact-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .contact-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-light);
+    margin-bottom: 2rem;
+  }
+
+  .contact-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-weight: 200;
+    line-height: 2;
+    color: var(--white);
+    letter-spacing: 0.1em;
+    margin-bottom: 3rem;
+  }
+
+  .contact-btn {
+    display: inline-block;
+    padding: 1.2rem 4rem;
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .contact-btn:hover {
+    background: var(--gold);
+    color: var(--deep-navy);
+  }
+
+
+  .contact-address {
+    margin-top: 3rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    line-height: 2.2;
+    color: rgba(255,255,255,0.35);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--text-dark);
+    padding: 2.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .footer-copy {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    #hero { grid-template-columns: 1fr; }
+    #hero { padding: 8rem 2rem 6rem; }
+    .hero-scroll { left: 2rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .media-grid { grid-template-columns: 1fr; }
+    .section-inner { padding: 0 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">Bulwer<span></span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#media">Media</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-eyebrow">THINK TANK FOR BUSINESS</p>
+  <h1 class="hero-headline">
+    その判断、<br>根拠はありますか。
+    <em>経営判断に、思考の土台を。</em>
+  </h1>
+  <p class="hero-sub">
+    Bulwer は、民間企業のための独立系シンクタンクです。<br>
+    調査し、分析し、言語化する。<br>
+    行動につながる思考の土台を、あなたの組織に届けます。
+  </p>
+  <p class="hero-scroll">SCROLL</p>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <p class="section-label reveal">About</p>
+    <div class="about-grid">
+      <div class="reveal">
+        <h2 class="about-title">
+          言葉を扱う会社が、<br>
+          <em>行動を最も</em><br>
+          大切にする理由。
+        </h2>
+      </div>
+      <div class="reveal">
+        <div class="about-body">
+          <p>Bulwer は、民間企業向けの独立系シンクタンクです。エビデンスに基づく調査・分析・提言を通じて、経営判断の質を高めることを使命としています。</p>
+          <p>一般的なコンサルティングが「実行支援」を、調査会社が「データ提供」を中心に置くとすれば、Bulwer が提供するのはその間にある「思考の土台」です。意思決定者が自ら考え、行動できる状態をつくること。それが私たちの仕事です。</p>
+          <p>三つのサービス — Mini Think Tank、Verbalization Consulting、K2A — を通じて、組織の知を行動へと変換します。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="philosophy-block reveal">
+      <p class="philosophy-text">
+        言葉で終わる言葉に、価値はない。<br>
+        <strong>行動だけが、言葉に意味を与える。</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-inner">
+    <div class="services-header reveal">
+      <p class="section-label">Services</p>
+      <h2 class="services-title">三つの手段で、<br>思考を行動へ。</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-number">01</div>
+        <span class="service-en">MINI THINK TANK</span>
+        <h3 class="service-name">経営課題の調査・分析</h3>
+        <p class="service-desc">組織が直面する経営課題に対して、エビデンスベースの調査と構造的分析を提供します。社内では生み出しにくい「外部知見×定量根拠」の組み合わせで、意思決定の質を高めます。</p>
+        <p class="service-detail">
+          市場・競合・組織の構造分析<br>
+          経営判断のための根拠形成<br>
+          アドバイザリーレポート作成
+        </p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-number">02</div>
+        <span class="service-en">VERBALIZATION CONSULTING</span>
+        <h3 class="service-name">暗黙知の言語化</h3>
+        <p class="service-desc">組織に眠る暗黙知・経験知を、誰もが理解できる言葉へと変換します。属人化した知識を組織の資産に転換し、人材育成・引き継ぎ・ナレッジマネジメントを強化します。</p>
+        <p class="service-detail">
+          業務プロセスの言語化・体系化<br>
+          ノウハウのドキュメント化<br>
+          組織知識のアーカイブ構築
+        </p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-number">03</div>
+        <span class="service-en">K2A</span>
+        <h3 class="service-name">知識のAI実装</h3>
+        <p class="service-desc">組織固有の知識・判断基準・業務フローを、AIが実行可能な形式へと変換します。Knowledge to Action — 知識を、現場で動く力へ。</p>
+        <p class="service-detail">
+          業務プロンプトの設計・最適化<br>
+          AI導入のための知識整備<br>
+          組織特化型AIツールの構築支援
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MEDIA -->
+<section id="media">
+  <div class="section-inner">
+    <p class="section-label reveal">Media</p>
+    <h2 class="services-title reveal">考えを、発信する。</h2>
+    <p class="media-account reveal">東京AI経営キャンプ by 株式会社Bulwer</p>
+    <div class="media-grid">
+      <a href="https://note.com/aikigyou_23427/n/n20c5b259c8af" target="_blank" class="media-card reveal">
+        <span class="media-tag">AI × 経営</span>
+        <p class="media-title">【楽天株急騰】KDDIのローソンTOBが示すAI時代の新潮流</p>
+      </a>
+      <a href="https://note.com/aikigyou_23427" target="_blank" class="media-card reveal">
+        <span class="media-tag">AI × 経営</span>
+        <p class="media-title">大谷翔平はAIで再現可能か？</p>
+      </a>
+      <a href="https://note.com/aikigyou_23427" target="_blank" class="media-card reveal">
+        <span class="media-tag">AI × 経営</span>
+        <p class="media-title">【プロンプトあり】本番レベルのプレゼンをChat GPTと作る方法</p>
+      </a>
+    </div>
+    <a href="https://note.com/aikigyou_23427" target="_blank" class="media-more reveal">
+      note でもっと読む →
+    </a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner contact-inner">
+    <p class="contact-eyebrow reveal">CONTACT</p>
+    <h2 class="contact-title reveal">
+      経営の問いを、<br>
+      一緒に考えませんか。
+    </h2>
+    <a href="/cdn-cgi/l/email-protection#b6d5d9d8c2d7d5c2f6d4c3dac1d3c498dcc6" class="contact-btn reveal">お問い合わせ</a>
+    <p class="contact-address reveal">
+      〒150-0021 東京都渋谷区恵比寿西2丁目4番8号&lt;br&gt;
+      ウィンド恵比寿ビル8F
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">Bulwer</span>
+  <span class="footer-copy">© 2026 Bulwer. All rights reserved. / bulwer.jp</span>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  } else {
+    // fallback: show everything
+    reveals.forEach(el => el.classList.add('visible'));
+  }
+  
+  // Safety: show all after 2s in case observer fails
+  
