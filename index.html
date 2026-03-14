@@ -844,7 +844,7 @@
       経営の問いを、<br>
       一緒に考えませんか。
     </h2>
-    <a href="/cdn-cgi/l/email-protection#b6d5d9d8c2d7d5c2f6d4c3dac1d3c498dcc6" class="contact-btn reveal">お問い合わせ</a>
+    <button class="contact-btn reveal" id="open-contact-btn">お問い合わせ</button>
     <p class="contact-address reveal">
       〒150-0021 東京都渋谷区恵比寿西2丁目4番8号&lt;br&gt;
       ウィンド恵比寿ビル8F
@@ -859,6 +859,23 @@
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Contact modal
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('open-contact-btn');
+    if (btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('contact-modal').style.display = 'flex';
+      });
+    }
+    var overlay = document.getElementById('contact-modal');
+    if (overlay) {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) overlay.style.display = 'none';
+      });
+    }
+  });
+
   // Scroll reveal
   const reveals = document.querySelectorAll('.reveal');
   
