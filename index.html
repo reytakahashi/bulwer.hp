@@ -39,9 +39,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(250,250,248,0.92);
+    background: rgba(13,31,60,0.96);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(184,150,12,0.2);
     transition: all 0.3s ease;
   }
 
@@ -74,7 +74,7 @@
     font-size: 0.75rem;
     font-weight: 300;
     letter-spacing: 0.1em;
-    color: var(--text-mid);
+    color: rgba(255,255,255,0.6);
     text-decoration: none;
     transition: color 0.2s;
   }
@@ -230,7 +230,7 @@
     font-size: 0.9rem;
     font-weight: 300;
     line-height: 2.4;
-    color: var(--text-mid);
+    color: rgba(255,255,255,0.6);
     letter-spacing: 0.05em;
   }
 
@@ -247,7 +247,7 @@
     font-size: clamp(0.9rem, 1.4vw, 1.05rem);
     font-weight: 300;
     line-height: 2.5;
-    color: var(--text-mid);
+    color: rgba(255,255,255,0.6);
     letter-spacing: 0.08em;
   }
 
@@ -336,7 +336,7 @@
     font-size: 0.78rem;
     font-weight: 300;
     line-height: 2.2;
-    color: var(--text-mid);
+    color: rgba(255,255,255,0.6);
     letter-spacing: 0.05em;
     transition: color 0.3s;
   }
@@ -524,6 +524,139 @@
     color: rgba(255,255,255,0.2);
   }
 
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(13,31,60,0.85);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .modal-box {
+    background: var(--white);
+    width: 100%;
+    max-width: 560px;
+    padding: 3rem;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-mid);
+    line-height: 1;
+  }
+
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: var(--deep-navy);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .modal-sub {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: var(--text-light);
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+  }
+
+  .form-row {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--text-mid);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-label span {
+    color: var(--gold);
+    margin-left: 0.3rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border);
+    background: var(--white);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+
+  .form-input:focus {
+    border-color: var(--royal-blue);
+  }
+
+  textarea.form-input {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .form-submit {
+    width: 100%;
+    padding: 1rem;
+    background: var(--deep-navy);
+    color: var(--white);
+    border: none;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 0.5rem;
+  }
+
+  .form-submit:hover {
+    background: var(--royal-blue);
+  }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .form-success-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--deep-navy);
+    margin-bottom: 1rem;
+  }
+
+  .form-success-text {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 2;
+  }
+
   /* ── ANIMATIONS ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -553,7 +686,30 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#hero" class="nav-logo">Bulwer<span></span></a>
+  <a href="#hero" class="nav-logo">
+    <svg width="160" height="28" viewBox="0 0 160 28" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 2 2 L 22 2 L 22 18 Q 22 24 12 27 Q 2 24 2 18 Z"
+            fill="none" stroke="#fafaf8" stroke-width="0.8"/>
+      <text x="12" y="20"
+            font-family="Georgia, serif"
+            font-size="13"
+            font-weight="400"
+            fill="#fafaf8"
+            text-anchor="middle"
+            letter-spacing="-0.5">B<tspan fill="#d4af37">W</tspan></text>
+      <text x="32" y="17"
+            font-family="Georgia, serif"
+            font-size="16"
+            font-weight="400"
+            letter-spacing="2"
+            fill="#fafaf8">Bulwer</text>
+      <text x="33" y="25"
+            font-family="Georgia, serif"
+            font-size="5"
+            letter-spacing="1.5"
+            fill="#d4af37">THINK TANK FOR BUSINESS</text>
+    </svg>
+  </a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
