@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>性格診断システム — Big Five × TAエゴグラム</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Sans',sans-serif;background:#f5f4f0;color:#1a1a18;font-size:14px;line-height:1.6;}
+.app{max-width:860px;margin:0 auto;padding:24px 16px 60px;}
+h1{font-size:18px;font-weight:500;margin-bottom:4px;}
+.subtitle{font-size:12px;color:#73726c;margin-bottom:24px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:640px){.grid{grid-template-columns:1fr;}}
+.card{background:#fff;border-radius:12px;border:0.5px solid #d3d1c7;padding:16px 18px;}
+.card-title{font-size:12px;color:#73726c;margin-bottom:12px;font-weight:400;}
+.chart-wrap{display:flex;align-items:flex-end;gap:3px;height:160px;border-bottom:1px solid #d3d1c7;margin-bottom:0;padding:0 2px;}
+.eg-col{display:flex;flex-direction:column;align-items:center;flex:1;}
+.eg-bar{width:100%;border-radius:3px 3px 0 0;transition:height .45s cubic-bezier(.4,0,.2,1);}
+.eg-bval{font-size:10px;font-weight:500;color:#5f5e5a;margin-bottom:2px;height:14px;display:flex;align-items:center;justify-content:center;}
+.eg-xlabels{display:flex;gap:3px;padding:0 2px;margin-bottom:0;}
+.eg-xl{flex:1;text-align:center;padding-top:5px;}
+.eg-xl-abbr{font-size:12px;font-weight:500;}
+.eg-xl-name{font-size:9px;color:#888780;line-height:1.3;margin-top:1px;}
+.b5-row{display:grid;grid-template-columns:80px 1fr 28px;align-items:center;gap:8px;margin-bottom:6px;}
+.b5-label{font-size:11px;color:#3d3d3a;text-align:right;}
+.b5-track{height:6px;background:#e8e7e2;border-radius:3px;}
+.b5-fill{height:6px;border-radius:3px;transition:width .4s cubic-bezier(.4,0,.2,1);}
+.b5-val{font-size:11px;color:#73726c;text-align:right;}
+.sl-grid{display:grid;grid-template-columns:28px 1fr 24px;align-items:center;gap:6px;margin-bottom:5px;}
+.sl-lbl{font-size:11px;font-weight:500;text-align:right;}
+.sl-val{font-size:10px;color:#73726c;text-align:right;}
+input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:#e8e7e2;border-radius:2px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;border:1.5px solid #888780;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb:hover{border-color:#3d3d3a;}
+.result-full{grid-column:1/-1;}
+.result-card{background:#fff;border-radius:12px;border:0.5px solid #d3d1c7;padding:18px 20px;}
+.result-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:12px;}
+.result-type{font-size:17px;font-weight:500;color:#1a1a18;}
+.result-sub{font-size:11px;color:#888780;margin-top:2px;}
+.result-badge{font-size:10px;padding:3px 10px;border-radius:20px;white-space:nowrap;border:0.5px solid;}
+.traits{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+.trait{font-size:10px;padding:3px 8px;border-radius:20px;border:0.5px solid;}
+.result-desc{font-size:12px;color:#444441;line-height:1.75;margin-bottom:12px;}
+.result-risk{font-size:11px;padding:7px 11px;border-radius:8px;margin-bottom:10px;border:0.5px solid;}
+.risk-warn{background:#faeeda;color:#633806;border-color:#f0997b;}
+.risk-ok{background:#eaf3de;color:#27500a;border-color:#97c459;}
+.risk-danger{background:#fcebeb;color:#791f1f;border-color:#f09595;}
+.risk-neutral{background:#f1efe8;color:#5f5e5a;border-color:#d3d1c7;}
+.section-divider{border:none;border-top:0.5px solid #e8e7e2;margin:10px 0;}
+.integration-section{margin-top:10px;}
+.integration-title{font-size:11px;color:#73726c;margin-bottom:6px;}
+.b5-result-row{display:grid;grid-template-columns:88px 1fr;gap:8px;margin-bottom:5px;align-items:start;}
+.b5-res-lbl{font-size:11px;color:#73726c;padding-top:1px;}
+.b5-res-val{font-size:12px;color:#1a1a18;line-height:1.65;}
+.int-list{margin:0;padding:0;list-style:none;}
+.int-item{font-size:11px;color:#444441;line-height:1.7;padding:4px 0 4px 12px;border-left:2px solid #d3d1c7;margin-bottom:4px;}
+.preset-section{margin-bottom:14px;}
+.preset-title{font-size:11px;color:#73726c;margin-bottom:6px;}
+.preset-row{display:flex;gap:5px;flex-wrap:wrap;}
+.preset-row button{font-size:11px;padding:4px 10px;border-radius:6px;border:0.5px solid #d3d1c7;background:#f5f4f0;color:#73726c;cursor:pointer;transition:all .15s;}
+.preset-row button:hover{background:#e8e7e2;}
+.preset-row button.act{border-color:#888780;color:#1a1a18;background:#fff;}
+.footer{font-size:10px;color:#b4b2a9;text-align:center;margin-top:32px;line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>性格診断システム</h1>
+  <p class="subtitle">交流分析（TAエゴグラム）× Big Five パーソナリティ統合診断 &nbsp;|&nbsp; Dusay(1977), Barrick &amp; Mount(1991), Lahey(2009) に基づく</p>
+
+  <div class="preset-section">
+    <div class="preset-title">プリセット例</div>
+    <div class="preset-row" id="presetRow">
+      <button onclick="applyPreset('balanced')" id="pr-balanced" class="act">バランス型</button>
+      <button onclick="applyPreset('strict')" id="pr-strict">実直・規律型</button>
+      <button onclick="applyPreset('nurture')" id="pr-nurture">サポーター型</button>
+      <button onclick="applyPreset('analytical')" id="pr-analytical">分析型</button>
+      <button onclick="applyPreset('creative')" id="pr-creative">クリエイター型</button>
+      <button onclick="applyPreset('burnout')" id="pr-burnout">燃え尽きリスク型</button>
+      <button onclick="applyPreset('people')" id="pr-people">調和型</button>
+    </div>
+  </div>
+
+  <div style="margin-bottom:16px;">
+    <div style="font-size:11px;color:#73726c;margin-bottom:6px;font-weight:400;">総合診断結果</div>
+    <div class="result-card" id="resultCard"></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">Big Five パーソナリティ</div>
+      <div class="b5-row"><span class="b5-label">開放性 O</span><div class="b5-track"><div class="b5-fill" id="bf-O" style="width:65%;background:#534AB7;"></div></div><span class="b5-val" id="bv-O">65</span></div>
+      <div class="b5-row"><span class="b5-label">誠実性 C</span><div class="b5-track"><div class="b5-fill" id="bf-C" style="width:70%;background:#185FA5;"></div></div><span class="b5-val" id="bv-C">70</span></div>
+      <div class="b5-row"><span class="b5-label">外向性 E</span><div class="b5-track"><div class="b5-fill" id="bf-E" style="width:60%;background:#0F6E56;"></div></div><span class="b5-val" id="bv-E">60</span></div>
+      <div class="b5-row"><span class="b5-label">協調性 A</span><div class="b5-track"><div class="b5-fill" id="bf-A" style="width:72%;background:#BA7517;"></div></div><span class="b5-val" id="bv-A">72</span></div>
+      <div class="b5-row"><span class="b5-label">神経症傾向 N</span><div class="b5-track"><div class="b5-fill" id="bf-N" style="width:35%;background:#993556;"></div></div><span class="b5-val" id="bv-N">35</span></div>
+      <hr style="border:none;border-top:0.5px solid #e8e7e2;margin:10px 0 8px;">
+      <div style="font-size:10px;color:#b4b2a9;margin-bottom:8px;">スライダーで調整</div>
+      <div class="sl-grid"><span class="sl-lbl" style="color:#534AB7;">O</span><input type="range" min="0" max="100" step="1" value="65" id="sl-bO" oninput="onB5('O',+this.value)"><span class="sl-val" id="sv-bO">65</span></div>
+      <div class="sl-grid"><span class="sl-lbl" style="color:#185FA5;">C</span><input type="range" min="0" max="100" step="1" value="70" id="sl-bC" oninput="onB5('C',+this.value)"><span class="sl-val" id="sv-bC">70</span></div>
+      <div class="sl-grid"><span class="sl-lbl" style="color:#0F6E56;">E</span><input type="range" min="0" max="100" step="1" value="60" id="sl-bE" oninput="onB5('E',+this.value)"><span class="sl-val" id="sv-bE">60</span></div>
+      <div class="sl-grid"><span class="sl-lbl" style="color:#BA7517;">A</span><input type="range" min="0" max="100" step="1" value="72" id="sl-bA" oninput="onB5('A',+this.value)"><span class="sl-val" id="sv-bA">72</span></div>
+      <div class="sl-grid"><span class="sl-lbl" style="color:#993556;">N</span><input type="range" min="0" max="100" step="1" value="35" id="sl-bN" oninput="onB5('N',+this.value)"><span class="sl-val" id="sv-bN">35</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">TAエゴグラム — 各自我状態のエネルギー量</div>
+      <div class="chart-wrap" id="egChart">
+        <div class="eg-col"><div class="eg-bval" id="ev-CP">60</div><div class="eg-bar" id="eb-CP" style="height:96px;background:#534AB7;"></div></div>
+        <div class="eg-col"><div class="eg-bval" id="ev-NP">75</div><div class="eg-bar" id="eb-NP" style="height:120px;background:#0F6E56;"></div></div>
+        <div class="eg-col"><div class="eg-bval" id="ev-A">80</div><div class="eg-bar" id="eb-A" style="height:128px;background:#185FA5;"></div></div>
+        <div class="eg-col"><div class="eg-bval" id="ev-FC">70</div><div class="eg-bar" id="eb-FC" style="height:112px;background:#BA7517;"></div></div>
+        <div class="eg-col"><div class="eg-bval" id="ev-AC">40</div><div class="eg-bar" id="eb-AC" style="height:64px;background:#993556;"></div></div>
+      </div>
+      <div class="eg-xlabels">
+        <div class="eg-xl"><div class="eg-xl-abbr" style="color:#534AB7;">CP</div><div class="eg-xl-name">批判的親</div></div>
+        <div class="eg-xl"><div class="eg-xl-abbr" style="color:#0F6E56;">NP</div><div class="eg-xl-name">養育的親</div></div>
+        <div class="eg-xl"><div class="eg-xl-abbr" style="color:#185FA5;">A</div><div class="eg-xl-name">成人</div></div>
+        <div class="eg-xl"><div class="eg-xl-abbr" style="color:#BA7517;">FC</div><div class="eg-xl-name">自由な子ども</div></div>
+        <div class="eg-xl"><div class="eg-xl-abbr" style="color:#993556;">AC</div><div class="eg-xl-name">順応した子ども</div></div>
+      </div>
+      <hr style="border:none;border-top:0.5px solid #e8e7e2;margin:10px 0 8px;">
+      <div style="font-size:10px;color:#b4b2a9;margin-bottom:8px;">スライダーで調整</div>
+      <div class="sl-grid"><span class="sl-lbl" style="color:#534AB7;">CP</span><input type="range" min="0" max="100" step="1" value="60" id="sl-CP" oninput="onTA('CP',+this.value)"><span class="sl-val" id="sv-CP">60</span></div>
+      <div class="sl-grid"><span class="sl-lbl" style="color:#0F6E56;">NP</span><input type="range" min="0" max="100" step="1" value="75" id="sl-NP" oninput="onTA('NP',+this.value)"><span class="sl-val" id="sv-NP">75</span></div>
+      <div class="sl-grid"><span class="sl-lbl" style="color:#185FA5;">A</span><input type="range" min="0" max="100" step="1" value="80" id="sl-A" oninput="onTA('A',+this.value)"><span class="sl-val" id="sv-A">80</span></div>
+      <div class="sl-grid"><span class="sl-lbl" style="color:#BA7517;">FC</span><input type="range" min="0" max="100" step="1" value="70" id="sl-FC" oninput="onTA('FC',+this.value)"><span class="sl-val" id="sv-FC">70</span></div>
+      <div class="sl-grid"><span class="sl-lbl" style="color:#993556;">AC</span><input type="range" min="0" max="100" step="1" value="40" id="sl-AC" oninput="onTA('AC',+this.value)"><span class="sl-val" id="sv-AC">40</span></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    参照文献：Berne(1961, 1964) / Dusay(1977) / Stewart &amp; Joines(1987) / Barrick &amp; Mount(1991) Personnel Psychology 44, 1–26 / Costa &amp; McCrae(1992) NEO-PI-R / Lahey(2009) Am Psychol 64(4), 241–256<br>
+    本システムはフィードバック・対話支援を目的とした参考ツールです。臨床診断の代替としては使用できません。
+  </div>
+</div>
+
+<script>
+const EG_MAX = 160;
+const TA_KEYS = ['CP','NP','A','FC','AC'];
+const B5_KEYS = ['O','C','E','A','N'];
+
+const PRESETS = {
+  balanced:   {ta:{CP:60,NP:75,A:80,FC:70,AC:40}, b5:{O:65,C:70,E:60,A:72,N:35}},
+  strict:     {ta:{CP:90,NP:45,A:55,FC:30,AC:35}, b5:{O:40,C:85,E:45,A:30,N:50}},
+  nurture:    {ta:{CP:30,NP:90,A:60,FC:55,AC:55}, b5:{O:58,C:55,E:65,A:88,N:55}},
+  analytical: {ta:{CP:50,NP:40,A:95,FC:28,AC:32}, b5:{O:80,C:75,E:35,A:45,N:28}},
+  creative:   {ta:{CP:35,NP:60,A:55,FC:90,AC:30}, b5:{O:92,C:38,E:80,A:65,N:40}},
+  burnout:    {ta:{CP:72,NP:58,A:65,FC:25,AC:88}, b5:{O:50,C:82,E:40,A:60,N:78}},
+  people:     {ta:{CP:28,NP:75,A:50,FC:45,AC:90}, b5:{O:55,C:45,E:55,A:85,N:72}},
+};
+
+function getTA(){const v={};TA_KEYS.forEach(k=>v[k]=+document.getElementById('sl-'+k).value);return v;}
+function getB5(){const v={};B5_KEYS.forEach(k=>v[k]=+document.getElementById('sl-b'+k).value);return v;}
+
+function updateEgChart(ta){
+  TA_KEYS.forEach(k=>{
+    document.getElementById('eb-'+k).style.height=Math.round(ta[k]/100*EG_MAX)+'px';
+    document.getElementById('ev-'+k).textContent=ta[k];
+  });
+}
+function updateB5Chart(b5){
+  B5_KEYS.forEach(k=>{
+    document.getElementById('bf-'+k).style.width=b5[k]+'%';
+    document.getElementById('bv-'+k).textContent=b5[k];
+  });
+}
+
+function onTA(k,val){
+  document.getElementById('sv-'+k).textContent=val;
+  clearPresets();
+  const ta=getTA();ta[k]=val;
+  updateEgChart(ta);
+  renderResult(ta,getB5());
+}
+function onB5(k,val){
+  document.getElementById('sv-b'+k).textContent=val;
+  clearPresets();
+  const b5=getB5();b5[k]=val;
+  updateB5Chart(b5);
+  renderResult(getTA(),b5);
+}
+function clearPresets(){document.querySelectorAll('#presetRow button').forEach(b=>b.classList.remove('act'));}
+
+function applyPreset(name){
+  clearPresets();
+  document.getElementById('pr-'+name).classList.add('act');
+  const p=PRESETS[name];
+  TA_KEYS.forEach(k=>{document.getElementById('sl-'+k).value=p.ta[k];document.getElementById('sv-'+k).textContent=p.ta[k];});
+  B5_KEYS.forEach(k=>{document.getElementById('sl-b'+k).value=p.b5[k];document.getElementById('sv-b'+k).textContent=p.b5[k];});
+  updateEgChart(p.ta);
+  updateB5Chart(p.b5);
+  renderResult(p.ta,p.b5);
+}
+
+function classifyTA(ta, b5){
+  b5 = b5 || {O:50,C:50,E:50,A:50,N:50};
+  const taKeys=['CP','NP','A','FC','AC'];
+  const taSorted=taKeys.slice().sort((a,b)=>ta[b]-ta[a]);
+  const taTop1=taSorted[0];
+  const taSpread=ta[taTop1]-ta[taSorted[4]];
+
+  const b5Keys=['O','C','E','A','N'];
+  const b5Sorted=b5Keys.slice().sort((a,b)=>b5[b]-b5[a]);
+  const b5Top1=b5Sorted[0];
+  const sub=`TA：${taTop1}高 × Big Five：${b5Top1}高`;
+
+  const bh=(k,v)=>b5[k]>=(v!=null?v:55);
+  const bl=(k,v)=>b5[k]<=(v!=null?v:45);
+
+  if(taSpread<12) return {type:'自己探索型',sub:'各因子がほぼ均等',lv:'neutral',
+    traits:['バランスが取れている','柔軟性がある','状況対応力がある'],
+    desc:'どの自我状態も突出せず、状況に応じてバランスよく対応できる構成。特定の型に縛られない柔軟さが強みでもある。',
+    risk:'特段のリスクは見られない。自己観察を深めると強みが見えてくる。'};
+
+  if(taTop1==='A'){
+    if(bh('O',65)&&bh('E',60)) return {type:'探究リーダー型',sub,lv:'ok',
+      traits:['論理的','好奇心が旺盛','社交的・活動的','創造的','多面的思考'],
+      desc:'客観的な判断力（A）と高い開放性・外向性（Big Five）が組み合わさった探究型リーダー。新しいアイデアを取り込みながら論理的に実行できる。議論を好み、場を知的に活性化させる力がある。',
+      risk:'完成よりも探索を優先しすぎるリスク。誠実性（C）が低い場合は実行管理への意識が必要。'};
+    if(bh('C',65)&&bl('N',45)) return {type:'実務家型',sub,lv:'ok',
+      traits:['論理的','計画性が高い','実行力がある','信頼性が高い','情緒が安定している'],
+      desc:'現実的な判断力（A）と高い誠実性・情緒安定（Big Five）が組み合わさり、計画を立て確実に実行できる。感情に流されず安定したパフォーマンスを発揮する。組織の中で最も信頼されるタイプ。',
+      risk:'変化への対応や感情的な場面での柔軟性を意識的に取り入れると、さらに力が広がる。'};
+    if(bl('E',45)&&bh('C',55)) return {type:'冷静・分析型',sub,lv:'warn',
+      traits:['論理的','客観的','計画性が高い','冷静沈着','内省的・集中力が高い'],
+      desc:'論理的判断（A）と内省的・誠実な傾向（Big Five）が揃い、感情に流されない安定した思考が強み。問題解決・意思決定の場面で信頼される。',
+      risk:'対人信頼構築・チームの心理的安全性への配慮が必要。NPやFCを意識的に取り入れると関係性が広がる。'};
+    if(bh('N',60)) return {type:'内省分析型',sub,lv:'warn',
+      traits:['論理的','感情的に揺れやすい','内省的','慎重','自己批判的'],
+      desc:'論理的判断力（A）は高いが、感情的な揺れ（N高）が意思決定に影響しやすい。一人で考え込む傾向があり、慎重さが強みにも負担にもなる。',
+      risk:'神経症傾向（N）の高さによる精神的健康リスクに注意（Lahey, 2009）。Aの客観性を意識的に使うことが助けになる。'};
+    return {type:'冷静・分析型',sub,lv:'warn',
+      traits:['論理的','客観的','現実的','冷静沈着'],
+      desc:'情報を整理し現実的に判断する力が高く、感情に流されない安定した思考が強み。問題解決・意思決定の場面で信頼される。',
+      risk:'対人信頼構築・チームの心理的安全性への配慮が必要。'};
+  }
+
+  if(taTop1==='NP'){
+    if(bh('A',65)&&bh('E',60)) return {type:'共感コーチ型',sub,lv:'ok',
+      traits:['共感力が高い','協力的','人を育てる力','温かみがある','チームを活性化する'],
+      desc:'養育的な関わり（NP）と高い協調性・外向性（Big Five）が揃ったコーチ型。人の成長を支援することに喜びを感じ、チームの心理的安全性を自然と高める。',
+      risk:'自分の意見を後回しにしすぎるリスク。CPやAを意識的に使うことでさらにバランスが整う。'};
+    if(bh('N',60)) return {type:'感情的サポーター型',sub,lv:'warn',
+      traits:['共感力が高い','温かみがある','感情的に揺れやすい','自己犠牲的'],
+      desc:'他者を支えようとする温かさ（NP）と高い感受性（N高）が重なる。人の痛みに敏感で寄り添う力が強いが、他者の感情を引き受けすぎて消耗しやすい。',
+      risk:'共依存・燃え尽きリスクあり（Lahey, 2009）。自分自身の感情も同じように大切にすることが重要。'};
+    if(bh('C',60)) return {type:'サポーター型',sub,lv:'warn',
+      traits:['共感力が高い','計画性が高い','包容力がある','責任感が強い','温かみがある'],
+      desc:'他者の気持ちに敏感で支える力（NP）と、計画的・誠実な傾向（C高）が組み合わさる。感情的なサポートと実務的なサポートを両立できる。',
+      risk:'Aが低い場合、感情優先の判断が多くなりすぎるリスク。現実的な視点を補うと力が最大化される。'};
+    return {type:'サポーター型',sub,lv:'warn',
+      traits:['共感力が高い','包容力がある','他者を支える力','温かみがある'],
+      desc:'他者の気持ちに敏感で、自然と人を支えようとする温かさがある。チームの心理的安全性を高め、困っている人に寄り添う力が強み。',
+      risk:'過保護・共依存パターンへの注意。Aの視点を取り入れた現実的な判断が助けになる。'};
+  }
+
+  if(taTop1==='FC'){
+    if(bh('O',65)&&bh('E',60)) return {type:'クリエイター型',sub,lv:'ok',
+      traits:['創造的','自発的','好奇心が旺盛','社交的・活動的','アイデアが豊富'],
+      desc:'自発的なエネルギー（FC）と高い開放性・外向性（Big Five）が組み合わさった創造型。次々とアイデアを生み出し、場を活気づける力がある。',
+      risk:'実行管理が弱くなりがち。AやCの視点を補うことで強みが最大化される。'};
+    if(bh('A',65)&&bh('O',55)) return {type:'クリエイティブ共感型',sub,lv:'ok',
+      traits:['創造的','共感力が高い','好奇心が旺盛','遊び心がある','協力的'],
+      desc:'自発的エネルギー（FC）と協調性・開放性（Big Five）が組み合わさった創造的共感型。アイデアを生み出しながら周囲を巻き込む力がある。',
+      risk:'誠実性（C）が低い場合、計画性・実行管理に課題が出やすい。'};
+    if(bh('N',60)) return {type:'感情表現型',sub,lv:'warn',
+      traits:['自発的','感情的に揺れやすい','創造的','エネルギッシュ'],
+      desc:'自発的なエネルギー（FC）と高い感情反応性（N高）が重なる。感情が豊かで表現力があるが、気分に左右されやすい面もある。',
+      risk:'衝動制御・感情マネジメントへの意識が必要。Aと誠実性（C）を補うことで安定感が増す。'};
+    return {type:'クリエイティブ・自由型',sub,lv:'warn',
+      traits:['創造的','自発的','エネルギッシュ','アイデアが豊富'],
+      desc:'感情と好奇心に従う強いエネルギーと豊かな発想力が強み。場を明るくし、新しいアイデアを次々と生み出す力がある。',
+      risk:'実行管理の弱さへの注意。AやCの視点を補うことで強みが大きく伸びる。'};
+  }
+
+  if(taTop1==='CP'){
+    if(bh('C',65)&&bl('N',45)) return {type:'規律推進型',sub,lv:'warn',
+      traits:['高い基準を持つ','計画性が高い','責任感が強い','目標達成力がある','情緒が安定している'],
+      desc:'規範志向（CP）と高い誠実性・情緒安定（Big Five）が重なった推進型。品質・基準へのこだわりが強く、組織の規律を守る力がある。',
+      risk:'周囲への要求が高くなりすぎるリスク。NPやFCを意識的に加えることで関係性が広がる。'};
+    if(bh('N',60)) return {type:'自己犠牲型',sub,lv:'warn',
+      traits:['完璧主義','責任感が強い','感情的に揺れやすい','高い基準を持つ'],
+      desc:'高い規範志向（CP）と感情的な揺れ（N高）が重なり、自分にも他者にも厳しくなりやすい。強い責任感の裏側に慢性的なストレスを抱えやすい。',
+      risk:'燃え尽き症候群・抑うつのリスク高（Lahey, 2009）。FCを意識的に取り入れる関わりが有効。'};
+    if(bh('A',60)) return {type:'実直・規律型',sub,lv:'warn',
+      traits:['高い基準を持つ','責任感が強い','協力的','目標達成力がある','信念を曲げない'],
+      desc:'明確な規範（CP）と高い協調性（Big Five）が組み合わさり、厳しさと思いやりを併せ持つ。チームの規律を守りながら、周囲との関係性も大切にできる。',
+      risk:'自分の基準を周囲に押しつけすぎないよう、柔軟な関わり方の意識的な調整が助けになる。'};
+    return {type:'実直・規律型',sub,lv:'warn',
+      traits:['高い基準を持つ','責任感が強い','目標達成力がある','信念を曲げない'],
+      desc:'明確な規範と強い意志を持ち、品質・基準へのこだわりが強い。目標達成への推進力は高く、組織の規律を守る力がある。',
+      risk:'周囲への要求が高くなりすぎるリスク。柔軟な関わり方の意識的な調整が助けになる。'};
+  }
+
+  if(taTop1==='AC'){
+    if(bh('N',60)&&bh('C',60)) return {type:'自己犠牲型',sub,lv:'warn',
+      traits:['完璧主義','責任感が強い','感情的に揺れやすい','承認欲求','計画性が高い'],
+      desc:'他者への過剰適応（AC）と高い神経症傾向・誠実性（Big Five）が重なる。周囲からは「信頼できる人」として評価されやすいが、内側では慢性的なストレスを抱えやすい。',
+      risk:'燃え尽き症候群・抑うつのリスク高（Lahey, 2009）。FCを意識的に取り入れる関わりが有効。'};
+    if(bh('A',65)&&bh('N',55)) return {type:'献身サポーター型',sub,lv:'warn',
+      traits:['協力的・共感力が高い','気配り上手','場の空気を読む','感情的に揺れやすい'],
+      desc:'他者への適応（AC）と高い協調性・感受性（Big Five）が重なり、場を読んで献身的に動く力がある。チームの調和を保つ存在として自然と信頼される。',
+      risk:'自己主張の抑圧・内的ストレスの蓄積に注意。神経症傾向（N）が高い場合は燃え尽きリスクあり（Lahey, 2009）。'};
+    if(bh('A',60)&&bl('N',45)) return {type:'調和型',sub,lv:'warn',
+      traits:['対立を和らげる','場の空気を読む','協力的','気配り上手','場をまとめる力'],
+      desc:'場の空気を敏感に読み取り、対立や摩擦を自然と和らげる力がある。協調性の高さ（Big Five）と合わさって、チームの調和を保つ存在として信頼されやすい。',
+      risk:'自己主張の抑圧への注意。自分の声を大切にすることが長期的な健康につながる。'};
+    return {type:'調和型',sub,lv:'warn',
+      traits:['対立を和らげる','場の空気を読む','相手の感情に敏感','場をまとめる力'],
+      desc:'場の空気を敏感に読み取り、対立や摩擦を自然と和らげる力がある。チームの調和を保つ存在として周囲から信頼されやすい。',
+      risk:'自己主張の抑圧・内的ストレスの蓄積への注意。自分の声を大切にすることが長期的な健康につながる。'};
+  }
+
+  return {type:'自己探索型',sub,lv:'neutral',
+    traits:['バランスが取れている','状況対応力がある','柔軟性がある'],
+    desc:'特定のパターンに強く引っ張られることなく、状況に応じた対応ができる安定した構成。',
+    risk:'特段のリスクは見られない。今後の経験と内省を通じて輪郭がより明確になっていく。'};
+}
+
+function describeB5(b5){
+  const lv=v=>v>=70?'高':v>=55?'やや高':v>=45?'中':v>=30?'やや低':'低';
+  const r={O:'',C:'',E:'',A:'',N:''};
+  r.O=b5.O>=70?'好奇心旺盛・学習意欲が高く訓練習熟度への適性が高い（Barrick & Mount, 1991）':
+     b5.O>=55?'知的好奇心があり新しいアイデアにも比較的オープン':
+     b5.O>=45?'中程度の知的柔軟性。慣れた方法と新しい方法をバランスよく使い分ける':
+     b5.O>=30?'慣習的・具体的な思考を好む傾向。安定した環境で力を発揮しやすい':
+     '慣習的・具体的思考を強く好み、変化より安定を重視する';
+  r.C=b5.C>=70?'計画的・責任感が強く、全職種で業績予測力が最も高い因子（ρ=.20〜.23, Barrick & Mount, 1991）':
+     b5.C>=55?'比較的計画的で責任感があり、実行力も安定している':
+     b5.C>=45?'中程度の自己規律。状況によって計画的にもなれる':
+     b5.C>=30?'柔軟で臨機応変だが、実行管理・計画性に課題が出やすい':
+     '計画性よりも即興性を好む。柔軟だが実行管理への意識的な補強が有効';
+  r.E=b5.E>=70?'社交的・活動的で管理職・営業職での業績予測に有効（ρ=.15〜.18, Barrick & Mount, 1991）':
+     b5.E>=55?'人との関わりを楽しめる。適度な社交性がある':
+     b5.E>=45?'中程度の社交性。場面に応じて外向的にも内向的にもなれる':
+     b5.E>=30?'内省的・単独作業を好む傾向。深い集中力が強み':
+     '強い内省志向。単独で深く考える作業で最もパフォーマンスを発揮しやすい';
+  r.A=b5.A>=70?'協力的・共感力が高く、向社会的行動をとりやすい':
+     b5.A>=55?'協調性があり、他者への配慮も十分にできる':
+     b5.A>=45?'中程度の協調性。状況に応じて協力的にも独立的にもなれる':
+     b5.A>=30?'やや競争的・独立志向。自分の意見を明確に持ちやすい':
+     '競争的・独立志向が強い。直接的な意見表明を好む';
+  r.N=b5.N>=70?'感情反応が大きくストレス脆弱。精神的・身体的健康・寿命への広範なリスク（Lahey, 2009）':
+     b5.N>=55?'感情的な反応がやや大きく、ストレスへの感受性が高い':
+     b5.N>=45?'中程度の感情反応性。多くの場面で安定しているが、強いストレス下では揺れやすい':
+     b5.N>=30?'比較的情緒が安定しており、ストレス耐性がある':
+     '情緒が非常に安定しており、強いストレス下でも冷静さを保ちやすい';
+  return r;
+}
+
+function integrateAnalysis(ta,b5){
+  const lines=[];
+  if(b5.C>=70&&ta.CP>=70) lines.push('誠実性（Big Five）が高く、TAのCP（規範志向・責任感）も高い。規律に基づく計画的行動として誠実さが一致して示されている。');
+  if(b5.C>=70&&ta.A>=70&&ta.CP<70) lines.push('誠実性（Big Five）が高く、TAのA（現実判断・実行管理）も高い。感情や規範ではなく現実に基づいた計画的行動として誠実さが現れやすい。');
+  if(b5.N>=65&&ta.AC>=70) lines.push('神経症傾向（Big Five）と高ACが重なり、承認欲求・不安・自己抑圧が連動して現れやすい。Lahey（2009）の精神的健康リスクに注意が必要。');
+  if(b5.E>=70&&ta.FC>=70) lines.push('外向性（Big Five）と高FCが一致。社交的・自発的なエネルギーが行動として現れやすい。');
+  if(b5.A>=70&&ta.NP>=70) lines.push('協調性（Big Five）と高NPが重なり向社会的行動の動機が強い。ただしACも高い場合、動機が「善意のケア」か「服従・迎合」かの区別が必要。');
+  if(b5.O>=70&&ta.FC>=65) lines.push('開放性（Big Five）と高FCが一致。創造性・学習意欲が高く、訓練習熟度への適性と対応（Barrick & Mount, 1991）。');
+  if(b5.C>=75&&b5.N>=65) lines.push('誠実性が高く神経症傾向も高い。業績は維持されやすいが内的ストレスが蓄積しやすく、燃え尽きの早期モニタリングを推奨。');
+  if(b5.A>=70&&ta.AC>=70&&ta.NP<=40) lines.push('協調性が高いがNPが低くACが高い場合、「善意の協力」ではなく「服従・迎合」が動機の可能性がある。動機の質に注目した関わりが有効。');
+  if(lines.length===0) lines.push('両フレームワーク間に特記すべき強い相関パターンは見られない。各因子が独立した形で機能している可能性がある。');
+  return lines;
+}
+
+const TRAIT_COLORS=['#534AB7','#0F6E56','#185FA5','#BA7517','#993556','#993C1D'];
+
+function b5TopFactors(b5){
+  const labels={O:'開放性',C:'誠実性',E:'外向性',A:'協調性',N:'神経症傾向'};
+  const sorted=Object.keys(b5).sort((a,b2)=>b5[b2]-b5[a]);
+  const top=sorted.slice(0,2).map(k=>`${labels[k]}（${b5[k]}）`).join(' · ');
+  return top;
+}
+
+function renderResult(ta,b5){
+  const r=classifyTA(ta,b5);
+  const bd=describeB5(b5);
+  const ig=integrateAnalysis(ta,b5);
+
+  const riskCls=r.lv==='ok'?'risk-ok':r.lv==='danger'?'risk-danger':r.lv==='neutral'?'risk-neutral':'risk-warn';
+  const badgeCls=r.lv==='ok'?'background:#eaf3de;color:#27500a;border-color:#97c459;':r.lv==='danger'?'background:#fcebeb;color:#791f1f;border-color:#f09595;':r.lv==='neutral'?'background:#f1efe8;color:#5f5e5a;border-color:#d3d1c7;':'background:#faeeda;color:#633806;border-color:#f0997b;';
+  const badgeText=r.lv==='ok'?'健全パターン':r.lv==='danger'?'要注意':r.lv==='neutral'?'中間的':'注意あり';
+
+  const pills=r.traits.map((t,i)=>`<span class="trait" style="background:${TRAIT_COLORS[i%6]}18;border-color:${TRAIT_COLORS[i%6]}55;color:${TRAIT_COLORS[i%6]};">${t}</span>`).join('');
+  const b5rows=['O','C','E','A','N'].map(k=>{
+    const labels={O:'開放性',C:'誠実性',E:'外向性',A:'協調性',N:'神経症傾向'};
+    return `<div class="b5-result-row"><span class="b5-res-lbl">${labels[k]}（${b5[k]}）</span><span class="b5-res-val">${bd[k]}</span></div>`;
+  }).join('');
+  const igHtml=ig.map(l=>`<li class="int-item">${l}</li>`).join('');
+  const b5top=b5TopFactors(b5);
+
+  document.getElementById('resultCard').innerHTML=`
+    <div class="result-header">
+      <div>
+        <div class="result-type">${r.type}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap;">
+          <span style="font-size:11px;color:#73726c;">TAエゴグラム</span>
+          <span style="font-size:11px;color:#d3d1c7;">×</span>
+          <span style="font-size:11px;color:#73726c;">Big Five 上位：${b5top}</span>
+        </div>
+      </div>
+      <span class="result-badge" style="${badgeCls}">${badgeText}</span>
+    </div>
+    <div class="traits">${pills}</div>
+    <p class="result-desc">${r.desc}</p>
+    <div class="result-risk ${riskCls}">${r.risk}</div>
+    <hr class="section-divider">
+    <div class="integration-section">
+      <div class="integration-title">統合分析（TA × Big Five）</div>
+      <ul class="int-list">${igHtml}</ul>
+      <hr class="section-divider">
+      <div class="integration-title">Big Five — 各因子の詳細</div>
+      ${b5rows}
+    </div>
+  `;
+}
+
+applyPreset('balanced');
+</script>
+</body>
+</html>
