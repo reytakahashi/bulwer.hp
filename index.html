@@ -248,7 +248,7 @@
     font-size: clamp(0.9rem, 1.4vw, 1.05rem);
     font-weight: 300;
     line-height: 2.5;
-    color: rgba(255,255,255,0.6);
+    color: var(--text-mid);
     letter-spacing: 0.08em;
   }
 
@@ -660,6 +660,123 @@
     line-height: 2;
   }
 
+
+  /* ── PIPELINE ── */
+  .pipeline-wrap {
+    display: grid;
+    grid-template-columns: 1fr 48px 1fr 48px 1fr;
+    gap: 0;
+    align-items: start;
+    margin-top: 3rem;
+  }
+
+  .pipeline-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 2.5rem;
+    color: var(--gold);
+    font-size: 1.2rem;
+    opacity: 0.6;
+  }
+
+  .pipeline-card {
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    border-top: 2px solid var(--border);
+    transition: border-color 0.3s;
+    position: relative;
+  }
+
+  .pipeline-card:hover {
+    border-color: var(--gold);
+  }
+
+  .pipeline-step {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .pipeline-step::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .pipeline-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--deep-navy);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+
+  .pipeline-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: var(--text-light);
+    margin-bottom: 1.2rem;
+  }
+
+  .pipeline-desc {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.77rem;
+    font-weight: 300;
+    line-height: 2.2;
+    color: var(--text-mid);
+    letter-spacing: 0.04em;
+    margin-bottom: 1.2rem;
+  }
+
+  .pipeline-detail {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 300;
+    color: var(--text-light);
+    line-height: 2;
+    letter-spacing: 0.05em;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .pipeline-tagline {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--deep-navy);
+  }
+
+  .pipeline-tagline-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.85rem;
+    font-weight: 200;
+    line-height: 2.2;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.1em;
+  }
+
+  .pipeline-tagline-text strong {
+    color: var(--gold-light);
+    font-weight: 400;
+  }
+
+  @media (max-width: 900px) {
+    .pipeline-wrap {
+      grid-template-columns: 1fr;
+    }
+    .pipeline-arrow { display: none; }
+  }
+
   /* ── ANIMATIONS ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -771,42 +888,62 @@
   <div class="section-inner">
     <div class="services-header reveal">
       <p class="section-label">Services</p>
-      <h2 class="services-title">三つの手段で、<br>思考を行動へ。</h2>
+      <h2 class="services-title">知を、行動に変える<br>3つのステップ。</h2>
     </div>
-    <div class="services-grid">
-      <div class="service-card reveal">
-        <div class="service-number">01</div>
-        <span class="service-en">MINI THINK TANK</span>
-        <h3 class="service-name">経営課題の調査・分析</h3>
-        <p class="service-desc">組織が直面する経営課題に対して、エビデンスベースの調査と構造的分析を提供します。社内では生み出しにくい「外部知見×定量根拠」の組み合わせで、意思決定の質を高めます。</p>
-        <p class="service-detail">
+
+    <div class="pipeline-wrap">
+      <!-- Step 01 -->
+      <div class="pipeline-card reveal">
+        <p class="pipeline-step">STEP 01 — 発見する</p>
+        <h3 class="pipeline-name">経営課題の調査・分析</h3>
+        <p class="pipeline-en">MINI THINK TANK</p>
+        <p class="pipeline-desc">組織が直面する経営課題に対して、エビデンスベースの調査と構造的分析を提供します。社内では生み出しにくい「外部知見×定量根拠」の組み合わせで、意思決定の質を高めます。</p>
+        <p class="pipeline-detail">
           市場・競合・組織の構造分析<br>
           経営判断のための根拠形成<br>
           アドバイザリーレポート作成
         </p>
       </div>
-      <div class="service-card reveal">
-        <div class="service-number">02</div>
-        <span class="service-en">VERBALIZATION CONSULTING</span>
-        <h3 class="service-name">暗黙知の言語化</h3>
-        <p class="service-desc">組織に眠る暗黙知・経験知を、誰もが理解できる言葉へと変換します。属人化した知識を組織の資産に転換し、人材育成・引き継ぎ・ナレッジマネジメントを強化します。</p>
-        <p class="service-detail">
+
+      <!-- Arrow -->
+      <div class="pipeline-arrow">→</div>
+
+      <!-- Step 02 -->
+      <div class="pipeline-card reveal">
+        <p class="pipeline-step">STEP 02 — 顕在化する</p>
+        <h3 class="pipeline-name">暗黙知の言語化</h3>
+        <p class="pipeline-en">VERBALIZATION CONSULTING</p>
+        <p class="pipeline-desc">組織に眠る暗黙知・経験知を、誰もが理解できる言葉へと変換します。属人化した知識を組織の資産に転換し、ナレッジマネジメントを強化します。</p>
+        <p class="pipeline-detail">
           業務プロセスの言語化・体系化<br>
           ノウハウのドキュメント化<br>
           組織知識のアーカイブ構築
         </p>
       </div>
-      <div class="service-card reveal">
-        <div class="service-number">03</div>
-        <span class="service-en">K2A</span>
-        <h3 class="service-name">知識のAI実装</h3>
-        <p class="service-desc">組織固有の知識・判断基準・業務フローを、AIが実行可能な形式へと変換します。Knowledge to Action — 知識を、現場で動く力へ。</p>
-        <p class="service-detail">
+
+      <!-- Arrow -->
+      <div class="pipeline-arrow">→</div>
+
+      <!-- Step 03 -->
+      <div class="pipeline-card reveal">
+        <p class="pipeline-step">STEP 03 — 実行する</p>
+        <h3 class="pipeline-name">知識のAI実装</h3>
+        <p class="pipeline-en">K2A — KNOWLEDGE TO ACTION</p>
+        <p class="pipeline-desc">組織固有の知識・判断基準・業務フローを、AIが実行可能な形式へと変換します。知を、現場で動く力へ。</p>
+        <p class="pipeline-detail">
           業務プロンプトの設計・最適化<br>
           AI導入のための知識整備<br>
           組織特化型AIツールの構築支援
         </p>
       </div>
+    </div>
+
+    <div class="pipeline-tagline reveal">
+      <p class="pipeline-tagline-text">
+        3つのサービスは、独立した選択肢ではなく<strong>一本のパイプライン</strong>です。<br>
+        リサーチで課題を発見し、言語化で知識を顕在化し、AIで行動に変える。<br>
+        この統合的なアプローチを提供できるのは、Bulwerだけです。
+      </p>
     </div>
   </div>
 </section>
@@ -845,9 +982,9 @@
       経営の問いを、<br>
       一緒に考えませんか。
     </h2>
-    <button class="contact-btn reveal" id="open-contact-btn">お問い合わせ</button>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScHitP3e9yZPg3mPyW6F0SNg-VWtvvpymTLpuFA2KhD8TbDDQ/viewform" target="_blank" class="contact-btn reveal">お問い合わせ</a>
     <p class="contact-address reveal">
-      〒150-0021 東京都渋谷区恵比寿西2丁目4番8号&lt;br&gt;
+      〒150-0021 東京都渋谷区恵比寿西2丁目4番8号<br>
       ウィンド恵比寿ビル8F
     </p>
   </div>
@@ -861,20 +998,24 @@
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // Contact modal
+  function openContactModal() {
+    var modal = document.getElementById('contact-modal');
+    if (modal) modal.style.display = 'flex';
+  }
   document.addEventListener('DOMContentLoaded', function() {
     var btn = document.getElementById('open-contact-btn');
-    if (btn) {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('contact-modal').style.display = 'flex';
-      });
-    }
+    if (btn) btn.addEventListener('click', openContactModal);
     var overlay = document.getElementById('contact-modal');
     if (overlay) {
       overlay.addEventListener('click', function(e) {
         if (e.target === overlay) overlay.style.display = 'none';
       });
     }
+  });
+  // fallback
+  window.addEventListener('load', function() {
+    var btn = document.getElementById('open-contact-btn');
+    if (btn) btn.onclick = openContactModal;
   });
 
   // Scroll reveal
